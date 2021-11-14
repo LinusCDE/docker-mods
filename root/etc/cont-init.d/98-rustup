@@ -26,7 +26,8 @@ apt-get install -y gcc $COMPILERS
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y -q \
   --default-toolchain nightly \
-  --profile complete \
+  --profile default \
+  -c rust-src \
   $RUSTUP_EXTRA
 
 echo "**** Rust installed ****"
