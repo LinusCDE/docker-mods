@@ -1,7 +1,31 @@
-#!/bin/sh
+#!/usr/bin/with-contenv bash
+
+echo "**** Installing rust ****"
+
+if [ -z "$DOCKER_MODS_RUST_NO_CROSS_COMPILERS" ]; then
+    case ARCH=$(uname -m)
+        case $ARCH in
+        x86_64)
+            COMPILERS="gcc-aarch64-linux-gnu gcc-arm-linux-gnueabihf"
+            RUSTUP_EXTRA="--target aarch64-unknown-linux-gnu,armv7-unknown-linux-gnueabihf"
+        ;;
+        aarch64)
+            COMPILERS="gcc-x86-64-linux-gnu gcc-arm-linux-gnueabihf"
+            RUSTUP_EXTRA="--target x86_64-unknown-linux-gnu,armv7-unknown-linux-gnueabihf"
+        *)
+            echo "Unsupported architecture: $ARCH ." >&2
+            echo "Won't install any cross compilers" >&2
+            COMPILERS=""
+            RUSTUP_EXTRA=""
+        ;;
+    esac
+fi
+
+apt-get install -y gcc $COMPILIERS
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y -q \
   --default-toolchain nightly \
-  --profile complete
+  --profile complete \
+  $RUSTUP_EXTRA
 
-#  --target armv7-unknown-linux-gnueabihf \
+echo "**** Rust installed ****"
