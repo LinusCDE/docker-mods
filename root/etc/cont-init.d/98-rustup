@@ -12,6 +12,7 @@ if [ -z "$DOCKER_MODS_RUST_NO_CROSS_COMPILERS" ]; then
         aarch64)
             COMPILERS="gcc-x86-64-linux-gnu gcc-arm-linux-gnueabihf"
             RUSTUP_EXTRA="--target x86_64-unknown-linux-gnu,armv7-unknown-linux-gnueabihf"
+        ;;
         *)
             echo "Unsupported architecture: $ARCH ." >&2
             echo "Won't install any cross compilers" >&2
