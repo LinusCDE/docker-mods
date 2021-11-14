@@ -3,8 +3,8 @@
 echo "**** Installing rust ****"
 
 if [ -z "$DOCKER_MODS_RUST_NO_CROSS_COMPILERS" ]; then
-    case ARCH=$(uname -m)
-        case $ARCH in
+    ARCH=$(uname -m)
+    case $ARCH in
         x86_64)
             COMPILERS="gcc-aarch64-linux-gnu gcc-arm-linux-gnueabihf"
             RUSTUP_EXTRA="--target aarch64-unknown-linux-gnu,armv7-unknown-linux-gnueabihf"
