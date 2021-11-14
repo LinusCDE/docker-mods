@@ -39,4 +39,6 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y -q \
   --target "$RUST_TARGETS" \
   -c "rust-src" \
 
+export PATH="$HOME/.cargo/bin:$PATH"
+
 echo "**** Rust installed ****"
