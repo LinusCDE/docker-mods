@@ -2,32 +2,41 @@
 
 echo "**** Installing rust ****"
 
+[ -z "$DOCKER_MODS_RUST_TOOLCHAIN" ] && DOCKER_MODS_RUST_TOOLCHAIN="stable"
+[ -z "$DOCKER_MODS_RUST_PROFILE" ] && DOCKER_MODS_RUST_PROFILE="default"
+
 if [ -z "$DOCKER_MODS_RUST_NO_CROSS_COMPILERS" ]; then
     ARCH=$(uname -m)
     case $ARCH in
         x86_64)
             COMPILERS="gcc-aarch64-linux-gnu gcc-arm-linux-gnueabihf"
-            RUSTUP_EXTRA="--target aarch64-unknown-linux-gnu,armv7-unknown-linux-gnueabihf"
+            RUST_TARGETS="aarch64-unknown-linux-gnu,armv7-unknown-linux-gnueabihf"
         ;;
         aarch64)
             COMPILERS="gcc-x86-64-linux-gnu gcc-arm-linux-gnueabihf"
-            RUSTUP_EXTRA="--target x86_64-unknown-linux-gnu,armv7-unknown-linux-gnueabihf"
+            RUST_TARGETS="x86_64-unknown-linux-gnu,armv7-unknown-linux-gnueabihf"
         ;;
         *)
             echo "Unsupported architecture: $ARCH ." >&2
             echo "Won't install any cross compilers" >&2
             COMPILERS=""
-            RUSTUP_EXTRA=""
+            RUST_TARGETS=""
         ;;
     esac
 fi
 
+echo "**** Rust: Toolchain: $DOCKER_MODS_RUST_TOOLCHAIN ****"
+echo "**** Rust: Profile: $DOCKER_MODS_RUST_PROFILE ****"
+echo "**** Rust: Extra Targets: $RUST_TARGETS ****"
+echo "**** Rust: Cross Compilers: $COMPILERS ****"
+
+
 apt-get install -y gcc $COMPILERS
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y -q \
-  --default-toolchain nightly \
-  --profile default \
-  -c rust-src \
-  $RUSTUP_EXTRA
+  --default-toolchain "$DOCKER_MODS_RUST_TOOLCHAIN" \
+  --profile "$DOCKER_MODS_RUST_PROFILE" \
+  --target "$RUST_TARGETS" \
+  -c "rust-src" \
 
 echo "**** Rust installed ****"
