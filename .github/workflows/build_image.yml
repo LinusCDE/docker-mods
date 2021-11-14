@@ -18,10 +18,10 @@ jobs:
       - name: Tag image
         if: ${{ github.ref == format('refs/heads/{0}', env.BRANCH) }}
         run: |
-          #docker tag ${{ github.sha }} ${ENDPOINT}/${BRANCH}:
-          #docker tag ${{ github.sha }} ${ENDPOINT}/${BRANCH}:${{ github.sha }}
-          docker tag ${{ github.sha }} ghcr.io/${ENDPOINT}/${BRANCH}:
-          docker tag ${{ github.sha }} ghcr.io/${ENDPOINT}/${BRANCH}:${{ github.sha }}
+          docker tag ${{ github.sha }} ${ENDPOINT}:${BRANCH}:
+          docker tag ${{ github.sha }} ${ENDPOINT}:${BRANCH}-${{ github.sha }}
+          docker tag ${{ github.sha }} ghcr.io/${ENDPOINT}:${BRANCH}
+          docker tag ${{ github.sha }} ghcr.io/${ENDPOINT}:${BRANCH}-${{ github.sha }}
       - name: Credential check
         if: ${{ github.ref == format('refs/heads/{0}', env.BRANCH) }}
         run: |
@@ -42,8 +42,8 @@ jobs:
       - name: Push tags to GitHub Container Registry
         if: ${{ github.ref == format('refs/heads/{0}', env.BRANCH) && env.CR_USER && env.CR_PAT }}
         run: |
-          docker push ghcr.io/${ENDPOINT}/${BRANCH}:${{ github.sha }}
-          docker push ghcr.io/${ENDPOINT}/${BRANCH}:
+          docker push ghcr.io/${ENDPOINT}:${BRANCH}-${{ github.sha }}
+          docker push ghcr.io/${ENDPOINT}:${BRANCH}
       - name: Login to DockerHub
         if: ${{ github.ref == format('refs/heads/{0}', env.BRANCH) && env.DOCKERUSER && env.DOCKERPASS }}
         run: |
@@ -51,5 +51,5 @@ jobs:
       - name: Push tags to DockerHub
         if: ${{ github.ref == format('refs/heads/{0}', env.BRANCH) && env.DOCKERUSER && env.DOCKERPASS }}
         run: |
-          docker push ${ENDPOINT}/${BRANCH}:${{ github.sha }}
-          docker push ${ENDPOINT}/${BRANCH}:
+          docker push ${ENDPOINT}:${BRANCH}-${{ github.sha }}
+          docker push ${ENDPOINT}:${BRANCH}
