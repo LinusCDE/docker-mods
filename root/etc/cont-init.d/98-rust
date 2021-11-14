@@ -34,11 +34,12 @@ echo "**** Rust: Cross Compilers: $COMPILERS ****"
 apt-get install -y gcc $COMPILERS
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y -q \
+  --no-modify-path \
   --default-toolchain "$DOCKER_MODS_RUST_TOOLCHAIN" \
   --profile "$DOCKER_MODS_RUST_PROFILE" \
   --target "$RUST_TARGETS" \
-  -c "rust-src" \
+  -c "rust-src"
 
-echo 'PATH="$HOME/.cargo/bin:$PATH"' >> /etc/environment
+sed -i '/^#!\/usr\/bin/a \\n# Added by linuscde/docker-mods:rust\nexport PATH=/config/.cargo/bin:$PATH' /etc/services.d/code-server/run
 
 echo "**** Rust installed ****"
