@@ -22,7 +22,7 @@ if [ -z "$DOCKER_MODS_RUST_NO_CROSS_COMPILERS" ]; then
     esac
 fi
 
-apt-get install -y gcc $COMPILIERS
+apt-get install -y gcc $COMPILERS
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y -q \
   --default-toolchain nightly \
